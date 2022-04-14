@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CarController : MonoBehaviour
+{
+
+    [SerializeField] private float MoveSpeed;
+
+    private bool movingLeft = true;
+    private bool firstInput = true;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (GameManager.instance.GameStarted)
+        {
+            Move();
+            CheckInput();
+        }
+        
+        if (transform.position.y <= -2)
+        {
+            GameManager.instance.GameOver();
+        }
+    }
+
+    void Move()
+    {
+        transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+    }
+
+    void CheckInput()
+    {
+        if (firstInput)
+        {
+            firstInput = false;
+            return;
+        }
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            print("asd");
+            if (movingLeft)
+            {
+                movingLeft = false;
+                Quaternion from = transform.rotation;
+                Quaternion to = Quaternion.Euler(transform.rotation.x, transform.rotation.y + 10, transform.rotation.z);
+                transform.rotation = Quaternion.Lerp(from, to, 10 * Time.deltaTime);
+            }
+            else
+            {
+                movingLeft = true;
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+        }
+    }
+
+    //void ChangeDirection()
+    //{
+    //    if (movingLeft)
+    //    {
+    //        movingLeft = false;
+    //        transform.rotation = Quaternion.Euler(0, 90, 0);
+    //    }
+    //    else
+    //    {
+    //        movingLeft = true;
+    //        transform.rotation = Quaternion.Euler(0, 0, 0);
+    //    }
+    //}
+}
